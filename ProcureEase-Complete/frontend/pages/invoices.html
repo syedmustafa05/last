@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoices - ProcureEase</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="d-flex align-items-center">
+                <i class="fas fa-boxes-stacked text-primary fs-4 me-2"></i>
+                <h4 class="mb-0 text-dark">ProcureEase</h4>
+            </div>
+        </div>
+        <ul class="sidebar-nav">
+            <li class="nav-item">
+                <a href="dashboard.html" class="nav-link">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="requisitions.html" class="nav-link">
+                    <i class="fas fa-file-invoice"></i>
+                    <span>Requisitions</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="vendors.html" class="nav-link">
+                    <i class="fas fa-building"></i>
+                    <span>Vendors</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="purchase-orders.html" class="nav-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Purchase Orders</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="goods-receipts.html" class="nav-link">
+                    <i class="fas fa-truck"></i>
+                    <span>Goods Receipts</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="invoices.html" class="nav-link active">
+                    <i class="fas fa-receipt"></i>
+                    <span>Invoices</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <button class="btn btn-link sidebar-toggle" id="sidebarToggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 class="h4 mb-0 ms-2">Invoices</h1>
+                </div>
+                <div class="dropdown">
+                    <button class="btn btn-link dropdown-toggle user-dropdown" type="button" 
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar-circle me-2">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <span class="d-none d-md-inline">Admin User</span>
+                        </div>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="h3 mb-1">Invoice Management</h2>
+                    <p class="text-muted mb-0">Create and manage invoices</p>
+                </div>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#invoiceModal" onclick="openInvoiceModal()">
+                    <i class="fas fa-plus me-2"></i>New Invoice
+                </button>
+            </div>
+
+            <!-- Filters and Search -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                <input type="text" class="form-control" id="searchInput" placeholder="Search invoices...">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <select class="form-select" id="statusFilter">
+                                <option value="">All Status</option>
+                                <option value="Draft">Draft</option>
+                                <option value="Sent">Sent</option>
+                                <option value="Paid">Paid</option>
+                                <option value="Overdue">Overdue</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select class="form-select" id="purchaseOrderFilter">
+                                <option value="">All Purchase Orders</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <select class="form-select" id="sortBy">
+                                <option value="invoice_date">Sort by Date</option>
+                                <option value="amount">Sort by Amount</option>
+                                <option value="status">Sort by Status</option>
+                                <option value="due_date">Sort by Due Date</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-outline-secondary w-100" onclick="clearFilters()">
+                                <i class="fas fa-times me-1"></i>Clear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Invoices Table -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Invoices List</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Invoice #</th>
+                                    <th>Purchase Order</th>
+                                    <th>Amount</th>
+                                    <th>Invoice Date</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoicesTableBody">
+                                <tr>
+                                    <td colspan="7" class="text-center">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoice Modal -->
+    <div class="modal fade" id="invoiceModal" tabindex="-1" aria-labelledby="invoiceModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form id="invoiceForm">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="invoiceModalLabel">New Invoice</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" id="invoiceId">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="purchaseOrderId" class="form-label">Purchase Order <span class="text-danger">*</span></label>
+                                <select class="form-select" id="purchaseOrderId" name="purchase_order_id" required>
+                                    <option value="">Select Purchase Order</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="invoiceNumber" class="form-label">Invoice Number <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="invoiceNumber" name="invoice_number" required placeholder="e.g., INV-2024-001">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="invoiceAmount" class="form-label">Amount <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="invoiceAmount" name="amount" step="0.01" min="0" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="invoiceDate" class="form-label">Invoice Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="invoiceDate" name="invoice_date" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="dueDate" class="form-label">Due Date <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="dueDate" name="due_date" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="invoiceStatus" class="form-label">Status</label>
+                                <select class="form-select" id="invoiceStatus" name="status">
+                                    <option value="Draft">Draft</option>
+                                    <option value="Sent">Sent</option>
+                                    <option value="Paid">Paid</option>
+                                    <option value="Overdue">Overdue</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label for="invoiceDescription" class="form-label">Description</label>
+                                <textarea class="form-control" id="invoiceDescription" name="description" rows="3" placeholder="Invoice description or additional details..."></textarea>
+                            </div>
+                        </div>
+                        <div class="alert alert-danger d-none" id="invoiceErrorMessage" role="alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <span id="invoiceErrorText"></span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="saveInvoiceBtn">
+                            <span class="btn-text">Save Invoice</span>
+                            <span class="spinner-border spinner-border-sm d-none" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this invoice? This action cannot be undone.</p>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        <strong>Warning:</strong> This will permanently remove the invoice record.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">
+                        <span class="btn-text">Delete Invoice</span>
+                        <span class="spinner-border spinner-border-sm d-none" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="../js/api.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/invoices.js"></script>
+</body>
+</html>

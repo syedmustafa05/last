@@ -203,6 +203,11 @@ class APIService {
             return false;
         }
     }
+
+    // Users API methods (for dropdowns and references)
+    async getUsers() {
+        return this.makeRequest('/users');
+    }
 }
 
 // Create global API instance
